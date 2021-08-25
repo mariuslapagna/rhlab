@@ -1,0 +1,8 @@
+all:
+  hosts:
+    infra001.rhlab.ch:
+      ipaddress: 192.168.206.237
+    loadbalancer001.rhlab.ch:
+      ipaddress: 192.168.206.236
+    installer001.rhlab.ch:
+      ipaddress: 192.168.206.224
