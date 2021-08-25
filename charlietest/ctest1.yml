@@ -1,0 +1,8 @@
+---
+- name: just testing connection 
+  hosts: all 
+  
+  tasks: 
+    - name: just printing hostname 
+      debug: 
+        msg: HI THERE, THIS IS "{{ ansible_fqdn }}!" 
