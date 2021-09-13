@@ -1,5 +1,6 @@
 ---
 - name: Give your name
+  hosts: all 
   roles:
     - { role: role1 }
     - { role: role2 }
