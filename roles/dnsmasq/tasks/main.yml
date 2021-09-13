@@ -1,6 +1,6 @@
 ---
 # tasks file for dnsmasq
-tasks:
+
 - name: Install dnsmasq
   yum:
     name: dnsmasq

@@ -1,0 +1,5 @@
+---
+- name: DNS Server
+  roles:
+    - dnsmasq
+
