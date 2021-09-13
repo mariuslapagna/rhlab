@@ -29,6 +29,14 @@
 
 - name: add firewall rule 
   firewalld:
-    service: dns
+    zone: public
+    port: 53/tcp
+    permanent: true
+    state: enabled
+
+- name: add firewall rule 
+  firewalld:
+    zone: public
+    port: 53/tcp
     permanent: true
     state: enabled
