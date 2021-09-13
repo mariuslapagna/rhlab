@@ -37,6 +37,6 @@
 - name: add firewall rule 
   firewalld:
     zone: public
-    port: 53/tcp
+    port: 53/udp
     permanent: true
     state: enabled
