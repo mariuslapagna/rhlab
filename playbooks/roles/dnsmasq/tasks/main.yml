@@ -26,3 +26,9 @@
     dest: /etc/hosts.dnsmasq
     src: hosts.dnsmasq.j2
   notify: Restart dnsmasq
+
+- name: add firewall rule 
+  firewalld:
+    service: dns
+    permanent: true
+    state: enabled
