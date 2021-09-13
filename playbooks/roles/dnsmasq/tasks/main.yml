@@ -33,7 +33,7 @@
     port: 53/tcp
     permanent: true
     state: enabled
-    notify: Restart firewalld
+  notify: Restart firewalld
 
 - name: add firewall rule 
   firewalld:
@@ -41,4 +41,4 @@
     port: 53/udp
     permanent: true
     state: disabled
-    notify: Restart firewalld
+  notify: Restart firewalld
