@@ -20,3 +20,10 @@ bogus-priv
 expand-hosts
 cache-size=1000
 no-resolv
+
+#DHCP config
+dhcp-range={{ dhcp_range }}
+{% for fqdn in groups.all %}
+{% set hostname = fqdn.split('.') %}
+dhcp-host={{ hostvars[fqdn].macaddress }},{{ hostname[0] }},{{ hostvars[fqdn].ipaddress }}		
+{% endfor %}
