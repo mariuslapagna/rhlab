@@ -1,0 +1,5 @@
+---
+- name: Give your name
+  roles:
+    - { role: role1 }
+    - { role: role2 }
