@@ -1,11 +1,11 @@
 all:
   hosts:
     infra001.rhlab.ch:
-      macadress: 00:50:56:8a:a4:85
-      ipaddress: 192.168.206.237
+      macadress: '00:50:56:8a:a4:85'
+      ipaddress: '192.168.206.237'
     loadbalancer001.rhlab.ch:
-      macaddress: 00:50:56:8a:d2:88
-      ipaddress: 192.168.206.55
+      macaddress: '00:50:56:8a:d2:88'
+      ipaddress: '192.168.206.55'
     installer001.rhlab.ch:
-      macaddress: 00:50:56:8a:12:81
-      ipaddress: 192.168.206.224
+      macaddress: '00:50:56:8a:12:81'
+      ipaddress: '192.168.206.224'
