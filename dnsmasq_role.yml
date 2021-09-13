@@ -4,3 +4,7 @@
   roles:
     - { role: role1 }
     - { role: role2 }
+  tasks: 
+    - name: just printing hostname 
+      debug: 
+        msg: HI THERE, THIS IS "{{ ansible_fqdn }}!" 
