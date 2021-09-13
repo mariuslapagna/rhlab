@@ -1,5 +1,6 @@
 ---
 - name: DNS Server
+  hosts: '{{ target }}'
   roles:
     - dnsmasq
 
