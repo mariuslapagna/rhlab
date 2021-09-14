@@ -22,11 +22,11 @@ cache-size=1000
 no-resolv
 
 #DHCP config
-{% if dhcp_range_dynamic is defined and variable|length %}
+{% if dhcp_range_dynamic is defined and dhcp_range_dynamic|length %}
 dhcp-range={{ dhcp_range_dynamic }}
 {% endif %}
 
-{% if dhcp_range_static is defined and variable|length %}
+{% if dhcp_range_static is defined and dhcp_range_static|length %}
 dhcp-range={{ dhcp_range_static }},static
 read-ethers
 {% endif %}
