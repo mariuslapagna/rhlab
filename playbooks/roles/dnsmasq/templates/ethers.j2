@@ -1,0 +1,4 @@
+{% for fqdn in groups.all %}
+{% if hostvars[fqdn].macaddress is defined and variable|length %}
+{{ hostvars[fqdn].macaddress }}		{{ fqdn }}
+{% endfor %}

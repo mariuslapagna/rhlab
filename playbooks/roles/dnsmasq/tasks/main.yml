@@ -36,6 +36,12 @@
     src: hosts.dnsmasq.j2
   notify: Restart dnsmasq
 
+  - name: template ethers
+  template:
+    dest: /etc/ethers
+    src: ethers.j2
+  notify: Restart dnsmasq
+
 - name: add firewall rule 
   firewalld:
     zone: public

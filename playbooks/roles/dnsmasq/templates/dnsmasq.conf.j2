@@ -22,8 +22,5 @@ cache-size=1000
 no-resolv
 
 #DHCP config
-dhcp-range={{ dhcp_range }}
-
-{% for host in groups['all'] %}
-{{ hostvars[host].macaddress }}
-{% endfor %}
+dhcp-range={{ dhcp_range_dynamic }}
+dhcp-range={{ dhcp_range_static }},static
