@@ -53,5 +53,5 @@
   firewalld:
     service: dhcp
     permanent: yes
-    state: enable
+    state: enabled
     immediate: yes
