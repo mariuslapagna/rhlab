@@ -18,17 +18,20 @@
     state: started
     enabled: yes
 
-- template:
+- name: template resolv.conf
+  template:
     dest: /etc/resolv.conf 
     src: resolv.conf.j2
   notify: Restart dnsmasq
 
-- template:
+- name: template dnsmasq.conf
+  template:
     dest: /etc/dnsmasq.conf 
     src: dnsmasq.conf.j2
   notify: Restart dnsmasq
 
-- template:
+- name: template hosts.dnsmasq
+  template:
     dest: /etc/hosts.dnsmasq
     src: hosts.dnsmasq.j2
   notify: Restart dnsmasq
