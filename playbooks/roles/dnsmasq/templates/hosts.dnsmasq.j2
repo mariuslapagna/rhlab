@@ -1,6 +1,6 @@
 {% for fqdn in groups.all %}
 {% if hostvars[fqdn].ipaddress is defined and hostvars[fqdn]|length %}
 {% set hostname = fqdn.split('.') %}
-{{ hostvars[fqdn].ipaddress }}	{{ hostname[0] }}	{{ fqdn }}
+{{ hostvars[fqdn].ipaddress }} {{ fqdn }} {{ hostname[0] }}
 {% endif %}
 {% endfor %}
