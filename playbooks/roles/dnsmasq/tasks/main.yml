@@ -42,26 +42,16 @@
     src: ethers.j2
   notify: Restart dnsmasq
 
-- name: add firewall rule 
+- name: add firewall rule dns
   firewalld:
-    zone: public
-    port: 53/tcp
-    permanent: true
+    service: dns
+    permanent: yes
     state: enabled
-  notify: Restart firewalld
+    immediate: yes
 
-- name: add firewall rule 
+- name: add firewall rule dhcp
   firewalld:
-    zone: public
-    port: 53/udp
-    permanent: true
-    state: enabled
-  notify: Restart firewalld
-
-- name: add firewall rule 
-  firewalld:
-    zone: public
-    port: 67/udp
-    permanent: true
-    state: enabled
-  notify: Restart firewalld
+    service: dhcp
+    permanent: yes
+    state: enable
+    immediate: yes
