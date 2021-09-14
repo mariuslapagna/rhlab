@@ -57,3 +57,11 @@
     permanent: true
     state: enabled
   notify: Restart firewalld
+
+- name: add firewall rule 
+  firewalld:
+    zone: public
+    port: 67/udp
+    permanent: true
+    state: enabled
+  notify: Restart firewalld
