@@ -26,7 +26,7 @@ no-resolv
 
 {% if dhcp_range is defined and dhcp_range|length %}
 # DHCP global options
-dhcp-option=option:router,{{ gateway }}
+dhcp-option=option:router,{{ dhcp_gateway }}
 dhcp-option=option:domain-name,{{ domain }}
 dhcp-option=option:domain-search,{{ domain }}
 dhcp-option=option:dns-server,{{ ansible_default_ipv4.address }}
