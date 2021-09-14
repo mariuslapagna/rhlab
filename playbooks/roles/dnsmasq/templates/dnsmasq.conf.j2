@@ -24,6 +24,6 @@ no-resolv
 #DHCP config
 dhcp-range={{ dhcp_range }}
 
-{% for host in groups['hosts'] %}
+{% for host in groups['all'] %}
    {{ hostvars[host].ipaddress }}
 {% endfor %}
