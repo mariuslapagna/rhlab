@@ -26,10 +26,7 @@ all:
     ilo05.rhlab.ch:
       macaddress: 20:67:7C:ED:36:76
       ipaddress: 192.168.206.95
-    ilo06.rhlab.ch:
-      macaddress: 20:67:7C:ED:36:76
-      ipaddress: 192.168.206.95
-    #Hosts
+    #HW Hosts    
     host01.rhlab.ch:
       macaddress: 20:67:7c:de:49:40
       ipaddress: 192.168.206.101
