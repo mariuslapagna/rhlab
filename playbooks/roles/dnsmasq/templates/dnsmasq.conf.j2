@@ -4,9 +4,7 @@
 # as the long options legal on the command line. See
 # "/usr/sbin/dnsmasq --help" or "man 8 dnsmasq" for details.
 
-#listen-address=127.0.0.1,{{ ansible_default_ipv4.address }}
 domain={{ domain }}
-address=/{{ domain }}/127.0.0.1
 {% for nameserver in relay_nameservers %}
 server={{ nameserver }}
 {% endfor %}
