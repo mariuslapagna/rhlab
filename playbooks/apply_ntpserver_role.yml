@@ -1,0 +1,5 @@
+---
+- name: Apply ntpserver role
+  hosts: all 
+  roles:
+    - { role: ntpserver }
