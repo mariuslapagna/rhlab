@@ -28,6 +28,7 @@ dhcp-option=option:router,{{ dhcp_gateway }}
 dhcp-option=option:domain-name,{{ domain }}
 dhcp-option=option:domain-search,{{ domain }}
 dhcp-option=option:dns-server,{{ ansible_default_ipv4.address }}
+dhcp-option=option:ntp-server,{{ dhcp_ntp_server }}
 dhcp-leasefile=/var/lib/dnsmasq/dnsmasq.leases
 dhcp-authoritative
 read-ethers

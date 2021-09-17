@@ -12,12 +12,6 @@
     state: started
     enabled: yes
 
-- name: Start firewalld
-  service:
-    name: firewalld
-    state: started
-    enabled: yes
-
 - name: template resolv.conf
   template:
     dest: /etc/resolv.conf 

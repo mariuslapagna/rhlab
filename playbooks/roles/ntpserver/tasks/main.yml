@@ -2,6 +2,24 @@
 # tasks file for ntpserver
 - name: Install ntp
   yum:
-    name: ntp
+    name: chrony
     state: present
 
+- name: Start chronyd
+  service:
+    name: chronyd
+    state: started
+    enabled: yes
+
+- name: add firewall rule ntp
+  firewalld:
+    service: ntp
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: template chrony.conf
+  template:
+    dest: /etc/chrony.conf 
+    src: chrony.conf.j2
+  notify: Restart chrony
