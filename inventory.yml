@@ -42,3 +42,8 @@ all:
     host05.rhlab.ch:
       macaddress: 20:67:7c:e1:f4:98
       ipaddress: 192.168.206.105
+    #Cluster IP's
+    ocp001.rhlab.ch:
+      ipaddress: 192.168.206.111
+    api.ocp001.rhlab.ch:
+      ipaddress: 192.168.206.112
