@@ -22,4 +22,4 @@
   template:
     dest: /etc/chrony.conf 
     src: chrony.conf.j2
-  notify: Restart chrony
+  notify: Restart chronyd
