@@ -7,7 +7,7 @@
 domain={{ domain }}
 local=/{{ domain }}/
 {% if clustername is defined and clustername|length %}
-address=/.apps.{{ clustername }}.{{ domain }}/{{ wildcard_ip }}
+address=/.apps.{{ clustername }}.{{ domain }}/{{ cluster_wildcard_ip }}
 {% endif %}
 {% for nameserver in relay_nameservers %}
 server={{ nameserver }}
