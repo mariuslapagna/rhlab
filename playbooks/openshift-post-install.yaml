@@ -1,0 +1,14 @@
+---
+- name: "post intall steps for openshift 4.x"
+  hosts: "localhost"
+  become: false
+   # variable kubeconfig_path has to be set
+  # gather_facts: false
+  vars:
+    #nfs_server: "niko-nfs-001.rhlab.ch"
+    #storage_nfs_target_namespace: "nfs"
+      ansible_connection: local
+      #kube_config: "{{ kubeconfig_path }}"
+     kubeconfig: "{{ lookup('env','HOME') }}/.kube/config"
+  roles:
+    - { role: openshift-4-initial, tags: ['common'] }
