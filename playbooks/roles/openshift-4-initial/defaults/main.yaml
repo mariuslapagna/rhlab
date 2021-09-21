@@ -1,0 +1,13 @@
+---
+
+openshift_cli: oc
+
+project_name: nmdemo
+project_display_name: nmdemo
+project_desc: Demo for middlware
+# project_annotations:
+
+ocp_admin_users:
+  - opentlc-mgr
+  - niko
+  - admin

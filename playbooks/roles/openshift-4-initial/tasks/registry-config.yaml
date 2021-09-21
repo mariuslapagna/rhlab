@@ -1,0 +1,67 @@
+# ------------------------------------------------------------------------------
+# Step: Image registry storage configuration
+# ------------------------------------------------------------------------------
+- name: Create infra-registry pv
+  tags: registry
+  # ToDo: quite ugly to use ignore_errors :-/
+  ignore_errors: yes
+  k8s:
+    state: present
+    kubeconfig: "{{kubeconfig_path}}"
+    definition:
+        apiVersion: v1
+        kind: PersistentVolume
+        metadata:
+          name: ocs4registry-volume-nfs
+        spec:
+          accessModes:
+          - ReadWriteMany
+          capacity:
+            storage: 50Gi
+          nfs:
+            path: /nfs/oseregistry
+            server: niko-nfs-001.rhlab.ch
+          persistentVolumeReclaimPolicy: Recycle
+
+
+- name: Create registry-storage pvc
+  tags: registry
+  k8s:
+    state: present
+    kubeconfig: "{{kubeconfig_path}}"
+    definition:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: ocs4registry
+        namespace: openshift-image-registry
+      spec:
+        accessModes:
+        - ReadWriteMany
+        resources:
+          requests:
+            storage: 50Gi
+
+- name: Add pvc registry-storage to image registry and expose it
+  tags: registry
+  k8s:
+    state: present
+    kubeconfig: "{{kubeconfig_path}}"
+    merge_type: merge
+    definition:
+      kind: Config
+      apiVersion: imageregistry.operator.openshift.io/v1
+      metadata:
+        name: cluster
+      spec:
+        managementState: Managed
+        storage:
+          pvc:
+            claim: ocs4registry
+        defaultRoute: true
+# Needs retry because Operator needs time to create that object
+  failed_when: false
+  register: patch_status
+  retries: 18
+  delay: 10
+  until: patch_status.msg is not defined
