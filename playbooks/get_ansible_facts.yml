@@ -1,6 +1,6 @@
 ---
 - name: "Playbook to test the inventory_hostname and ansible_hostname"
-  hosts: all
+  hosts: {{myhosts}}
   tasks:
    - name: What is my ansible_hostname
      debug: var={{ansible_hostname}}
