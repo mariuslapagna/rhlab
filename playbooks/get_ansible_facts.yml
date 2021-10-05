@@ -1,4 +1,5 @@
 ---
 - name: Print all available facts
+- hosts: all 
   ansible.builtin.debug:
     var: ansible_facts
