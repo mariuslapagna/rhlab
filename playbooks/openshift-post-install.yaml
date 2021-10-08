@@ -2,11 +2,12 @@
 - name: "post intall steps for openshift 4.x"
   hosts: "localhost"
   become: false
-   # variable kubeconfig_path has to be set
-  # gather_facts: false
   vars:
       ansible_connection: local
-      #kube_config: "{{ kubeconfig_path }}"
       kubeconfig: "{{ lookup('env','HOME') }}/.kube/config"
+      htpasswd: |
+        niko:$apr1$8i60HRd7$VDcQmVdF42Cl7f9k/eLc51
+      ocp_admin_users:
+          - niko
   roles:
-    - { role: openshift-4-initial, tags: ['common'] }
+      - {role: openshift-4-initial}
