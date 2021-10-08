@@ -22,8 +22,7 @@
 
 
 - name: Create htpasswd secret
-  tags: auth,htpasswd
-  k8s:
+  community.kubernetes.k8s:
     state: present
     kubeconfig: "{{ kubeconfig }}"
     definition:
@@ -36,7 +35,7 @@
         namespace: openshift-config
       type: Opaque
   loop: "{{ lookup('dict', htpasswd) }}"
-
+  tags: auth,htpasswd
 
 - name: Create htpasswd identity provider template
   tags: auth,htpasswd
@@ -69,7 +68,7 @@
 
 - name: Configure identity providers
   tags: auth
-  k8s:
+  community.kubernetes.k8s:
     state: present
     kubeconfig: "{{ kubeconfig }}"
     definition:
@@ -82,7 +81,7 @@
 
 - name: Add cluster-admin role to admins
   tags: auth
-  k8s:
+  community.kubernetes.k8s:
     state: present
     kubeconfig: "{{ kubeconfig }}"
     definition:
