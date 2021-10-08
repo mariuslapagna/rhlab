@@ -22,7 +22,7 @@
 
 
 - name: Create htpasswd secret
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ kubeconfig }}"
     definition:
@@ -68,7 +68,7 @@
 
 - name: Configure identity providers
   tags: auth
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ kubeconfig }}"
     definition:
@@ -81,7 +81,7 @@
 
 - name: Add cluster-admin role to admins
   tags: auth
-  community.kubernetes.k8s:
+  kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ kubeconfig }}"
     definition:
