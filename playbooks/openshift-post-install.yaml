@@ -4,7 +4,7 @@
   become: false
   vars:
       ansible_connection: local
-      # kubeconfig: "{{ lookup('env','HOME') }}/.kube/config"
+      kubeconfig: "{{ lookup('env','HOME') }}/.kube/config"
       # htpasswd:
       #   local: |
       #     niko:$apr1$64z.beEg$qa6ua5luYoNMiY0iGR/Rq0
