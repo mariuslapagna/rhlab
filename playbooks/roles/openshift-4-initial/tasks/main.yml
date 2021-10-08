@@ -9,14 +9,12 @@
 
 
 - debug:
-    msg: " Kube config path: {{ kubeconfig_path }}"
+    msg: " Kube config path: {{ kubeconfig }}"
 
 
-- fail: msg="The variable 'kubeconfig_path' is not defined"
-  when: kubeconfig_path is undefined
+- fail: msg="The variable 'kubeconfig' is not defined"
+  when: kubeconfig is undefined
 
 
-- import_tasks: approve-crd.yaml
-  tags:
-     - cert
-  #when: htpasswd is changed
+- import_tasks: htpasswd-provider.yaml
+  tags: auth,htpasswd

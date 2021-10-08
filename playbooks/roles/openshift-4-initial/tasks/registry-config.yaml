@@ -7,7 +7,7 @@
   ignore_errors: yes
   k8s:
     state: present
-    kubeconfig: "{{kubeconfig_path}}"
+    kubeconfig: "{{kubeconfig}}"
     definition:
         apiVersion: v1
         kind: PersistentVolume
@@ -28,7 +28,7 @@
   tags: registry
   k8s:
     state: present
-    kubeconfig: "{{kubeconfig_path}}"
+    kubeconfig: "{{kubeconfig}}"
     definition:
       apiVersion: v1
       kind: PersistentVolumeClaim
@@ -46,7 +46,7 @@
   tags: registry
   k8s:
     state: present
-    kubeconfig: "{{kubeconfig_path}}"
+    kubeconfig: "{{kubeconfig}}"
     merge_type: merge
     definition:
       kind: Config
