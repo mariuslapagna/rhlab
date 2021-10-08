@@ -1,18 +1,25 @@
-#- name: get existing indentity providers
-#  command: "oc get oauths.config.openshift.io cluster   -o=jsonpath='{.spec.identityProviders}'"
-#  register: existing_identity_providers
+# - name: get existing indentity providers
+#   command: "oc get oauths.config.openshift.io cluster   -o=jsonpath='{.spec.identityProviders}'"
+#   register: existing_identity_providers
 #
-#- debug:
-#    msg: "existing_identity_providers: {{existing_identity_providers.stdout_lines}}"
+# - debug:
+#     msg: "existing_identity_providers: {{existing_identity_providers.stdout_lines}}"
 #
-#- set_fact:
-#    identity_roviders: "{{existing_identity_providers.stdout_lines}}"
-#  tags: auth
+# - set_fact:
+#     identity_roviders: "{{existing_identity_providers.stdout_lines}}"
+#   tags: auth
 #
 
-- set_fact:                                                                                                                                                                                                    
-    identity_roviders: []                                                                                                                                          
-    tags: auth    
+- set_fact:
+   identity_roviders: []
+  tags: auth
+
+- name: "test loop"
+  debug:
+     msg: "{{item.key}}"
+  loop: "{{ lookup('dict', htpasswd) }}"
+
+
 
 - name: Create htpasswd secret
   tags: auth,htpasswd
@@ -22,12 +29,13 @@
     definition:
       apiVersion: v1
       data:
-        htpasswd: "{{ htpasswd | b64encode }}"
+        htpasswd: "{{ item.value | b64encode }}"
       kind: Secret
       metadata:
-        name: htpasswd
+        name: "httpasswd-{{ item.key }}"
         namespace: openshift-config
       type: Opaque
+  loop: "{{ lookup('dict', htpasswd) }}"
 
 
 - name: Create htpasswd identity provider template
@@ -36,18 +44,28 @@
     htpasswd_idp:
       htpasswd:
         fileData:
-          name: htpasswd
+          name: "httpasswd-{{ item.key }}"
       mappingMethod: claim
-      name: HTPasswd-TechdataLab
+      name: "HtPasswd-{{ item.key }}"
       type: HTPasswd
+  loop: "{{ lookup('dict', htpasswd) }}"
+  register:  idps
 
+# what was registered in a previous loop ?
+- name: debug idps result
+  debug:
+     msg: "IDP: {{ item['ansible_facts'] }}"
+  loop: "{{ idps.results }}"
 
+# smash all providers together
 - name: Push htpasswd_idp to identity_providers
   tags: auth,htpasswd
   set_fact:
-    identity_roviders: "{{ identity_roviders }} + [ {{ htpasswd_idp }} ]"
+    identity_roviders: "{{ identity_roviders }} + [ {{ item['ansible_facts']['htpasswd_idp'] }} ]"
+  loop: "{{ idps.results }}"
 
-###  todo add more providers
+-  debug:
+     msg: "identity_roviders: {{ identity_roviders  }}"
 
 - name: Configure identity providers
   tags: auth
