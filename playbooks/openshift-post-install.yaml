@@ -3,7 +3,6 @@
   hosts: "localhost"
   become: false
   vars:
-      ansible_connection: local
       kubeconfig: "{{ lookup('env','HOME') }}/.kube/config"
       htpasswd:
          local: |
