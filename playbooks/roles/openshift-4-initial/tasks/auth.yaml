@@ -1,3 +1,18 @@
+#- name: get existing indentity providers
+#  command: "oc get oauths.config.openshift.io cluster   -o=jsonpath='{.spec.identityProviders}'"
+#  register: existing_identity_providers
+#
+#- debug:
+#    msg: "existing_identity_providers: {{existing_identity_providers.stdout_lines}}"
+#
+#- set_fact:
+#    identity_roviders: "{{existing_identity_providers.stdout_lines}}"
+#  tags: auth
+#
+
+- set_fact:                                                                                                                                                                                                    
+    identity_roviders: []                                                                                                                                          
+    tags: auth    
 
 - name: Create htpasswd secret
   tags: auth,htpasswd
@@ -23,7 +38,7 @@
         fileData:
           name: htpasswd
       mappingMethod: claim
-      name: HTPasswd-Locale
+      name: HTPasswd-TechdataLab
       type: HTPasswd
 
 

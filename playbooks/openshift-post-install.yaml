@@ -11,3 +11,7 @@
           - niko
   roles:
       - {role: openshift-4-initial}
+
+
+# print to stdout
+# htpasswd -nb kubeadmin <urpasswd>

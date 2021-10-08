@@ -3,9 +3,7 @@
 # ------------------------------------------------------------------------------
 # Configure authentication
 # ------------------------------------------------------------------------------
-- set_fact:
-    identity_roviders: "[]"
-  tags: auth
+
 
 
 - debug:
@@ -16,5 +14,5 @@
   when: kubeconfig is undefined
 
 
-- import_tasks: htpasswd-provider.yaml
+- import_tasks: auth.yaml
   tags: auth,htpasswd
