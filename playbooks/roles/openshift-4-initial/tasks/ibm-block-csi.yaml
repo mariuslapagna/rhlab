@@ -1,0 +1,29 @@
+# install and configure ibm-block-csi operator
+---
+- name: Create Namespace
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ kubeconfig }}"
+    definition:
+      kind: Namespace
+      apiVersion: v1
+      metadata:
+        name: "{{ kube_storage_namespace }}"
+  tags:
+    - storage
+    - ibm
+
+- name: "install operator"
+  kubernetes.core.k8s:
+    state: present
+    continue_on_error: true
+    namespace: "{{ kube_storage_namespace }}"
+    template:
+      crds/ibm-block-csi-operator.yaml
+  tags:
+    - storage
+    - ibm
+
+
+
+
