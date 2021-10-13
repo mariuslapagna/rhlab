@@ -19,7 +19,7 @@
     kubeconfig: "{{ kubeconfig }}"
     namespace: "{{ kube_storage_namespace }}"
     template:
-      crds/ibm-block-csi-operator.yaml
+      crds/ibm-block-csi-operator.yaml.j2
   tags:
     - storage
     - ibm
