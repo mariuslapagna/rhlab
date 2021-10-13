@@ -16,7 +16,7 @@
 - name: "install operator"
   kubernetes.core.k8s:
     state: present
-    continue_on_error: true
+    kubeconfig: "{{ kubeconfig }}"
     namespace: "{{ kube_storage_namespace }}"
     template:
       crds/ibm-block-csi-operator.yaml
