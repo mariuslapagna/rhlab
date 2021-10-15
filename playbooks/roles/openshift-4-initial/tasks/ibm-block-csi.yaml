@@ -37,10 +37,37 @@
   tags: 
     - storage
     - ibm
-  
+      
 
 - name: Print operator pod status
   ansible.builtin.debug: 
     msg: "pods running: {{podsrunning}}"
 
 
+- name: Install the IBM block storage CSI driver
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ kubeconfig }}"
+    namespace: "{{ kube_storage_namespace }}"
+    template:
+      crds/1.7.0/csi.ibm.com_v1_ibmblockcsi_cr.yaml.j2
+  tags:
+    - storage
+    - ibm
+
+
+- name: Wait for CSI drivers to start
+  shell: oc get pod -l csi  -n "{{ kube_storage_namespace }}" | grep -E "Running" | wc -l
+  register: csi_podsrunning
+  until: " '3' in csi_podsrunning.stdout"
+  retries: 120
+  delay: 2
+  changed_when: false
+  tags: 
+    - storage
+    - ibm
+      
+
+- name: Print operator pod status
+  ansible.builtin.debug: 
+    msg: "pods running: {{csi_podsrunning}}"
