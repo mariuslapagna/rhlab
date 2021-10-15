@@ -16,3 +16,9 @@
 
 - import_tasks: auth.yaml
   tags: auth,htpasswd
+
+- import_tasks: ibm-block-csi.yaml
+  tags:
+    - storage
+    - ibm
+
