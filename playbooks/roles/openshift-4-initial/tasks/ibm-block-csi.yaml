@@ -216,3 +216,56 @@
     - storage
     - ibm
 
+
+- name: "create a registry storage pvc"
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ kubeconfig }}"
+    namespace: "openshift-image-registry"
+    definition:
+      kind: PersistentVolumeClaim
+      apiVersion: v1
+      metadata:
+        name: registry-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 200Gi
+        storageClassName: svc-fs840-thin
+        volumeMode: Filesystem
+    wait: true
+    wait_timeout: 180
+  tags: 
+    - storage
+    - registry
+
+- name: Add pvc registry-storage to image registry and expose it
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ kubeconfig }}"
+    merge_type: merge
+    definition:
+      kind: Config
+      apiVersion: imageregistry.operator.openshift.io/v1
+      metadata:
+        name: cluster
+      spec:
+        managementState: Managed
+        storage:
+          pvc:
+            claim: registry-storage
+        defaultRoute: true
+# Needs retry because Operator needs time to create that object
+  failed_when: false
+  register: patch_status
+  retries: 18
+  delay: 10
+  until: patch_status.msg is not defined
+  tags: 
+    - storage
+    - registry
+
+    # todo check the state
+    # oc get configs.imageregistry.operator.openshift.io cluster -o yaml | grep -i state
