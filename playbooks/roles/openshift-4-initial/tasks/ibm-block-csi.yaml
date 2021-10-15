@@ -19,11 +19,28 @@
     kubeconfig: "{{ kubeconfig }}"
     namespace: "{{ kube_storage_namespace }}"
     template:
-      crds/ibm-block-csi-operator.yaml.j2
+      crds/1.7.0/ibm-block-csi-operator.yaml.j2
+  register: operators
   tags:
     - storage
     - ibm
 
 
+
+- name: Wait for operator pods to start
+  shell: oc get pod -l app.kubernetes.io/name=ibm-block-csi-operator  -n "{{ kube_storage_namespace }}" | grep -E "(1/1|2/2).*Running" | wc -l
+  register: podsrunning
+  until: " '1' in podsrunning.stdout"
+  retries: 120
+  delay: 2
+  changed_when: false
+  tags: 
+    - storage
+    - ibm
+  
+
+- name: Print operator pod status
+  ansible.builtin.debug: 
+    msg: "pods running: {{podsrunning}}"
 
 
