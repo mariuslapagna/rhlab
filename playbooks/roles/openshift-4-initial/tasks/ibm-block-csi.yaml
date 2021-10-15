@@ -234,9 +234,16 @@
           requests:
             storage: 200Gi
         storageClassName: svc-fs840-thin
-        volumeMode: Filesystem
+        volumeMode: Block
     wait: true
     wait_timeout: 180
+  tags: 
+    - storage
+    - registry
+
+- name: patch registry to rolloutStrategy recreate
+  shell: oc patch config.imageregistry.operator.openshift.io/cluster --type=merge -p '{"spec":{"rolloutStrategy":"Recreate","replicas":1}}'
+  changed_when: false
   tags: 
     - storage
     - registry
