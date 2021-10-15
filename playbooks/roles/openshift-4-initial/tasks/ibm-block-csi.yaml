@@ -57,6 +57,10 @@
     - ibm
 
 
+- name: Pause for 1 minutes to be sure pods are comming up fine
+  pause:
+    minutes: 1
+
 - name: Wait for CSI drivers to start
   shell: oc get pod -l csi  -n "{{ kube_storage_namespace }}" | grep -E "Running" | wc -l
   register: csi_podsrunning
@@ -69,6 +73,7 @@
     - ibm
       
 
+
 - name: Print operator pod status
   ansible.builtin.debug: 
     msg: "pods running: {{csi_podsrunning}}"
@@ -76,6 +81,7 @@
 - name: Install secret
   kubernetes.core.k8s:
     state: present
+    kubeconfig: "{{ kubeconfig }}"
     definition:
       apiVersion: v1 
       kind: Secret
@@ -88,10 +94,15 @@
         username: rhlab
       data:
         password: cmVkaGF0MTIzNA==
+  tags: 
+    - storage
+    - ibm
+
 
 - name: "create compressed storage class"
   kubernetes.core.k8s:
     state: present
+    kubeconfig: "{{ kubeconfig }}"
     definition:
       apiVersion: storage.k8s.io/v1
       kind: StorageClass
@@ -110,11 +121,15 @@
         csi.storage.k8s.io/fstype: xfs
         volume_name_prefix: rhlab-comp
       allowVolumeExpansion: true
+  tags: 
+    - storage
+    - ibm
 
 
 - name: "create a thin storage class"
   kubernetes.core.k8s:
     state: present
+    kubeconfig: "{{ kubeconfig }}"
     definition:
       apiVersion: storage.k8s.io/v1
       kind: StorageClass
@@ -135,6 +150,69 @@
         csi.storage.k8s.io/fstype: xfs
         volume_name_prefix: rhlab-thin
       allowVolumeExpansion: true
+  tags: 
+    - storage
+    - ibm
 
 
+
+- name: "create a test claim to be sure all works file"
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ kubeconfig }}"
+    namespace: "{{ kube_storage_namespace }}"
+    definition:
+      kind: PersistentVolumeClaim
+      apiVersion: v1
+      metadata:
+        name: test-pvc
+        namespace: techdata-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: svc-fs840-thin
+        volumeMode: Filesystem
+  tags: 
+    - storage
+    - ibm
+
+- name: Wait for test pvc to be  bound
+  shell: oc get pvc test-pvc  -n "{{ kube_storage_namespace }}"  -o=jsonpath='{.status.phase}' | grep "Bound" | wc -l
+  register: test_pvc_bound
+  until: " '1' in test_pvc_bound.stdout"
+  retries: 120
+  delay: 2
+  changed_when: false
+  tags: 
+    - storage
+    - ibm
+
+
+- name: "all good delte test-pvc"
+  kubernetes.core.k8s:
+    state: absent
+    kubeconfig: "{{ kubeconfig }}"
+    namespace: "{{ kube_storage_namespace }}"
+    definition:
+      kind: PersistentVolumeClaim
+      apiVersion: v1
+      metadata:
+        name: test-pvc
+        namespace: techdata-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: svc-fs840-thin
+        volumeMode: Filesystem
+    wait: true
+    wait_timeout: 180
+  tags: 
+    - storage
+    - ibm
 
