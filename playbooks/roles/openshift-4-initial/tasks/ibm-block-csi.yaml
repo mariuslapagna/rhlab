@@ -49,6 +49,7 @@
     state: present
     kubeconfig: "{{ kubeconfig }}"
     namespace: "{{ kube_storage_namespace }}"
+
     template:
       crds/1.7.0/csi.ibm.com_v1_ibmblockcsi_cr.yaml.j2
   tags:
@@ -71,3 +72,69 @@
 - name: Print operator pod status
   ansible.builtin.debug: 
     msg: "pods running: {{csi_podsrunning}}"
+
+- name: Install secret
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1 
+      kind: Secret
+      metadata:
+        name: svc-dh8
+        namespace: "{{ kube_storage_namespace }}"
+      type: Opaque
+      stringData:
+        management_address: "{{ ibm_storage_address }}"
+        username: rhlab
+      data:
+        password: cmVkaGF0MTIzNA==
+
+- name: "create compressed storage class"
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: storage.k8s.io/v1
+      kind: StorageClass
+      metadata:
+        name: svc-fs840-comp
+      provisioner: block.csi.ibm.com
+      parameters:
+        SpaceEfficiency: compressed
+        pool: fs840-csi
+        csi.storage.k8s.io/provisioner-secret-name: svc-dh8
+        csi.storage.k8s.io/provisioner-secret-namespace: "{{ kube_storage_namespace }}"
+        csi.storage.k8s.io/controller-publish-secret-name: svc-dh8
+        csi.storage.k8s.io/controller-publish-secret-namespace: "{{ kube_storage_namespace }}"
+        csi.storage.k8s.io/controller-expand-secret-name: svc-dh8
+        csi.storage.k8s.io/controller-expand-secret-namespace: "{{ kube_storage_namespace }}"
+        csi.storage.k8s.io/fstype: xfs
+        volume_name_prefix: rhlab-comp
+      allowVolumeExpansion: true
+
+
+- name: "create a thin storage class"
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: storage.k8s.io/v1
+      kind: StorageClass
+      metadata:
+        name: svc-fs840-thin
+        annotations:
+          storageclass.kubernetes.io/is-default-class: "true"
+      provisioner: block.csi.ibm.com
+      parameters:
+        SpaceEfficiency: thin
+        pool: fs840-csi
+        csi.storage.k8s.io/provisioner-secret-name: svc-dh8
+        csi.storage.k8s.io/provisioner-secret-namespace: "{{ kube_storage_namespace }}"
+        csi.storage.k8s.io/controller-publish-secret-name: svc-dh8
+        csi.storage.k8s.io/controller-publish-secret-namespace: "{{ kube_storage_namespace }}"
+        csi.storage.k8s.io/controller-expand-secret-name: svc-dh8
+        csi.storage.k8s.io/controller-expand-secret-namespace: "{{ kube_storage_namespace }}"
+        csi.storage.k8s.io/fstype: xfs
+        volume_name_prefix: rhlab-thin
+      allowVolumeExpansion: true
+
+
+
