@@ -234,7 +234,7 @@
           requests:
             storage: 200Gi
         storageClassName: svc-fs840-thin
-        volumeMode: Block
+        volumeMode: Filesystem
     wait: true
     wait_timeout: 180
   tags: 
