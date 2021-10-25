@@ -7,7 +7,7 @@
   tags: nfsprov
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig }}"
+    kubeconfig: "{{ kubeconfig_path }}"
     definition:
       kind: Namespace
       apiVersion: v1
@@ -18,7 +18,7 @@
   tags: nfsprov
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig }}"
+    kubeconfig: "{{ kubeconfig_path }}"
     definition:
       kind: ServiceAccount
       apiVersion: v1
@@ -30,7 +30,7 @@
   tags: nfsprov
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig }}"
+    kubeconfig: "{{ kubeconfig_path }}"
     definition:
       kind: ClusterRole
       apiVersion: rbac.authorization.k8s.io/v1
@@ -54,7 +54,7 @@
   tags: nfsprov
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig }}"
+    kubeconfig: "{{ kubeconfig_path }}"
     definition:
       kind: ClusterRoleBinding
       apiVersion: rbac.authorization.k8s.io/v1
@@ -73,7 +73,7 @@
   tags: nfsprov
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig }}"
+    kubeconfig: "{{ kubeconfig_path }}"
     definition:
       kind: Role
       apiVersion: rbac.authorization.k8s.io/v1
@@ -89,7 +89,7 @@
   tags: nfsprov
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig }}"
+    kubeconfig: "{{ kubeconfig_path }}"
     definition:
       kind: RoleBinding
       apiVersion: rbac.authorization.k8s.io/v1
@@ -106,13 +106,13 @@
 
 - name: Add SCC hostmount-anyuid to nfs-client-provisioner
   tags: nfsprov
-  command: "oc adm policy add-scc-to-user hostmount-anyuid -n {{ storage_nfs_target_namespace }} -z nfs-client-provisioner --config {{ kubeconfig }}"
+  command: "oc adm policy add-scc-to-user hostmount-anyuid -n {{ storage_nfs_target_namespace }} -z nfs-client-provisioner --config {{ kubeconfig_path }}"
 
 - name: Deploy nfs-provisioner
   tags: nfsprov
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig }}"
+    kubeconfig: "{{ kubeconfig_path }}"
     definition:
       kind: Deployment
       apiVersion: apps/v1
@@ -155,7 +155,7 @@
   tags: nfsprov
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig }}"
+    kubeconfig: "{{ kubeconfig_path }}"
     definition:
       apiVersion: storage.k8s.io/v1
       kind: StorageClass
@@ -175,7 +175,7 @@
   tags: pruning
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig }}"
+    kubeconfig: "{{ kubeconfig_path }}"
     definition:
       kind: ImagePruner
       apiVersion: imageregistry.operator.openshift.io/v1
