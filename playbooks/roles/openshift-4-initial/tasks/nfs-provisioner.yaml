@@ -134,7 +134,7 @@
             serviceAccountName: nfs-client-provisioner
             containers:
               - name: nfs-client-provisioner
-                image: rkevin/nfs-subdir-external-provisioner:fix-k8s-1.20
+                image: docker.io/rkevin/nfs-subdir-external-provisioner:fix-k8s-1.20
                 volumeMounts:
                   - name: nfs-client-root
                     mountPath: /persistentvolumes
