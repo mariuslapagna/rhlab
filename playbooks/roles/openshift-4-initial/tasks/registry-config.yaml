@@ -17,6 +17,8 @@
         resources:
           requests:
             storage: 100Gi
+      wait: true
+      wait_timeout: 180
 
 - name: Add pvc registry-storage to image registry and expose it
   tags: registry

@@ -34,13 +34,13 @@
   retries: 120
   delay: 2
   changed_when: false
-  tags: 
+  tags:
     - storage
     - ibm
-      
+
 
 - name: Print operator pod status
-  ansible.builtin.debug: 
+  ansible.builtin.debug:
     msg: "pods running: {{podsrunning}}"
 
 
@@ -68,14 +68,14 @@
   retries: 120
   delay: 2
   changed_when: false
-  tags: 
+  tags:
     - storage
     - ibm
-      
+
 
 
 - name: Print operator pod status
-  ansible.builtin.debug: 
+  ansible.builtin.debug:
     msg: "pods running: {{csi_podsrunning}}"
 
 - name: Install secret
@@ -83,7 +83,7 @@
     state: present
     kubeconfig: "{{ kubeconfig }}"
     definition:
-      apiVersion: v1 
+      apiVersion: v1
       kind: Secret
       metadata:
         name: svc-dh8
@@ -94,7 +94,7 @@
         username: rhlab
       data:
         password: cmVkaGF0MTIzNA==
-  tags: 
+  tags:
     - storage
     - ibm
 
@@ -121,7 +121,7 @@
         csi.storage.k8s.io/fstype: xfs
         volume_name_prefix: rhlab-comp
       allowVolumeExpansion: true
-  tags: 
+  tags:
     - storage
     - ibm
 
@@ -150,7 +150,7 @@
         csi.storage.k8s.io/fstype: xfs
         volume_name_prefix: rhlab-thin
       allowVolumeExpansion: true
-  tags: 
+  tags:
     - storage
     - ibm
 
@@ -175,7 +175,7 @@
             storage: 1Gi
         storageClassName: svc-fs840-thin
         volumeMode: Filesystem
-  tags: 
+  tags:
     - storage
     - ibm
 
@@ -186,7 +186,7 @@
   retries: 120
   delay: 2
   changed_when: false
-  tags: 
+  tags:
     - storage
     - ibm
 
@@ -212,7 +212,7 @@
         volumeMode: Filesystem
     wait: true
     wait_timeout: 180
-  tags: 
+  tags:
     - storage
     - ibm
 
@@ -237,16 +237,16 @@
         volumeMode: Filesystem
     wait: true
     wait_timeout: 180
-  tags: 
+  tags:
     - storage
-    - registry
+    - ibm
 
 - name: patch registry to rolloutStrategy recreate
   shell: oc patch config.imageregistry.operator.openshift.io/cluster --type=merge -p '{"spec":{"rolloutStrategy":"Recreate","replicas":1}}'
   changed_when: false
-  tags: 
+  tags:
     - storage
-    - registry
+    - ibm
 
 - name: Add pvc registry-storage to image registry and expose it
   kubernetes.core.k8s:
@@ -270,9 +270,10 @@
   retries: 18
   delay: 10
   until: patch_status.msg is not defined
-  tags: 
+  tags:
     - storage
-    - registry
+    - ibm
+
 
     # todo check the state
     # oc get configs.imageregistry.operator.openshift.io cluster -o yaml | grep -i state
