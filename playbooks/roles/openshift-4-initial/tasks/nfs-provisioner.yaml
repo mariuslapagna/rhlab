@@ -134,7 +134,7 @@
             serviceAccountName: nfs-client-provisioner
             containers:
               - name: nfs-client-provisioner
-                image: k8s.gcr.io/sig-storage/nfs-subdir-external-provisioner:v4.0.14
+                image: rkevin/nfs-subdir-external-provisioner:fix-k8s-1.20
                 volumeMounts:
                   - name: nfs-client-root
                     mountPath: /persistentvolumes
