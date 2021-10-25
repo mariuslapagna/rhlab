@@ -1,27 +1,3 @@
-# ------------------------------------------------------------------------------
-# Step: Image registry storage configuration
-# ------------------------------------------------------------------------------
-- name: Create infra-registry pv
-  tags: registry
-  # ToDo: quite ugly to use ignore_errors :-/
-  ignore_errors: yes
-  k8s:
-    state: present
-    kubeconfig: "{{kubeconfig}}"
-    definition:
-        apiVersion: v1
-        kind: PersistentVolume
-        metadata:
-          name: ocs4registry-volume-nfs
-        spec:
-          accessModes:
-          - ReadWriteMany
-          capacity:
-            storage: 50Gi
-          nfs:
-            path: /nfs/oseregistry
-            server: niko-nfs-001.rhlab.ch
-          persistentVolumeReclaimPolicy: Recycle
 
 
 - name: Create registry-storage pvc
@@ -40,7 +16,7 @@
         - ReadWriteMany
         resources:
           requests:
-            storage: 50Gi
+            storage: 100Gi
 
 - name: Add pvc registry-storage to image registry and expose it
   tags: registry
