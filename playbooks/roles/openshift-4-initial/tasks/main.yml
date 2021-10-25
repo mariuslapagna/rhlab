@@ -20,3 +20,5 @@
 - import_tasks: ibm-block-csi.yaml
 
 - import_tasks: nfs-provisioner.yaml
+
+- import_tasks: registry-config.yaml
