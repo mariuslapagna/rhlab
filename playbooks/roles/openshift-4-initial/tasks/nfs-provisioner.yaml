@@ -4,10 +4,10 @@
 # https://github.com/RedHat-EMEA-SSA-Team/hetzner-ocp4/blob/master/ansible/roles/openshift-4-cluster/tasks/post-install-storage-nfs.yml
 # ------------------------------------------------------------------------------
 - name: Create Namespace
-  tags: nfsprov
+  tags: nfsprov, storage
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig_path }}"
+    kubeconfig: "{{ kubeconfig }}"
     definition:
       kind: Namespace
       apiVersion: v1
@@ -15,10 +15,10 @@
         name: "{{ storage_nfs_target_namespace }}"
 
 - name: Create ServiceAccount
-  tags: nfsprov
+  tags: nfsprov, storage
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig_path }}"
+    kubeconfig: "{{ kubeconfig }}"
     definition:
       kind: ServiceAccount
       apiVersion: v1
@@ -27,10 +27,10 @@
         namespace: "{{ storage_nfs_target_namespace }}"
 
 - name: Create ClusteRole nfs-client-provisioner-runner
-  tags: nfsprov
+  tags: nfsprov, storage
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig_path }}"
+    kubeconfig: "{{ kubeconfig }}"
     definition:
       kind: ClusterRole
       apiVersion: rbac.authorization.k8s.io/v1
@@ -51,10 +51,10 @@
           verbs: ["create", "update", "patch"]
 
 - name: Create ClusteRoleBinding nfs-client-provisioner-runner <-> nfs-client-provisioner
-  tags: nfsprov
+  tags: nfsprov, storage
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig_path }}"
+    kubeconfig: "{{ kubeconfig }}"
     definition:
       kind: ClusterRoleBinding
       apiVersion: rbac.authorization.k8s.io/v1
@@ -70,10 +70,10 @@
         apiGroup: rbac.authorization.k8s.io
 
 - name: Create Role leader-locking-nfs-client-provisioner
-  tags: nfsprov
+  tags: nfsprov, storage
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig_path }}"
+    kubeconfig: "{{ kubeconfig }}"
     definition:
       kind: Role
       apiVersion: rbac.authorization.k8s.io/v1
@@ -86,10 +86,10 @@
           verbs: ["get", "list", "watch", "create", "update", "patch"]
 
 - name: Create RoleBinding leader-locking-nfs-client-provisioner <-> nfs-client-provisioner
-  tags: nfsprov
+  tags: nfsprov, storage
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig_path }}"
+    kubeconfig: "{{ kubeconfig }}"
     definition:
       kind: RoleBinding
       apiVersion: rbac.authorization.k8s.io/v1
@@ -105,14 +105,14 @@
         apiGroup: rbac.authorization.k8s.io
 
 - name: Add SCC hostmount-anyuid to nfs-client-provisioner
-  tags: nfsprov
-  command: "oc adm policy add-scc-to-user hostmount-anyuid -n {{ storage_nfs_target_namespace }} -z nfs-client-provisioner --config {{ kubeconfig_path }}"
+  tags: nfsprov, storage
+  command: "oc adm policy add-scc-to-user hostmount-anyuid -n {{ storage_nfs_target_namespace }} -z nfs-client-provisioner --config {{ kubeconfig }}"
 
 - name: Deploy nfs-provisioner
-  tags: nfsprov
+  tags: nfsprov, storage
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig_path }}"
+    kubeconfig: "{{ kubeconfig }}"
     definition:
       kind: Deployment
       apiVersion: apps/v1
@@ -144,18 +144,18 @@
                   - name: NFS_SERVER
                     value: "{{nfs_server}}"
                   - name: NFS_PATH
-                    value: "/nfs/oseshared"
+                    value: "{{nfs_path}}"
             volumes:
               - name: nfs-client-root
                 nfs:
                   server: "{{nfs_server}}"
-                  path: "/nfs/oseshared"
+                  path: "{{ nfs_path }}"
 
 - name: Storage Class
-  tags: nfsprov
+  tags: nfsprov, storage
   k8s:
     state: present
-    kubeconfig: "{{ kubeconfig_path }}"
+    kubeconfig: "{{ kubeconfig }}"
     definition:
       apiVersion: storage.k8s.io/v1
       kind: StorageClass
@@ -166,24 +166,3 @@
       provisioner: redhat-emea-ssa-team/nfs-client-provisioner
       parameters:
         archiveOnDelete: "false"
-
-
-# ------------------------------------------------------------------------------
-# Activate pruning jobs
-# ------------------------------------------------------------------------------
-- name: Activate image pruning
-  tags: pruning
-  k8s:
-    state: present
-    kubeconfig: "{{ kubeconfig_path }}"
-    definition:
-      kind: ImagePruner
-      apiVersion: imageregistry.operator.openshift.io/v1
-      metadata:
-        name: cluster
-      spec:
-        failedJobsHistoryLimit: 3
-        keepTagRevisions: 3
-        schedule: "42 4 * * *"
-        successfulJobsHistoryLimit: 3
-        suspend: false

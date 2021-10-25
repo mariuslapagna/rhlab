@@ -18,7 +18,5 @@
   tags: auth,htpasswd
 
 - import_tasks: ibm-block-csi.yaml
-  tags:
-    - storage
-    - ibm
 
+- import_tasks: nfs-provisioner.yaml
