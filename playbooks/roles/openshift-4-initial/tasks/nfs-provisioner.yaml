@@ -106,7 +106,7 @@
 
 - name: Add SCC hostmount-anyuid to nfs-client-provisioner
   tags: nfsprov, storage
-  command: "oc adm policy add-scc-to-user hostmount-anyuid -n {{ storage_nfs_target_namespace }} -z nfs-client-provisioner --config {{ kubeconfig }}"
+  command: "oc adm policy add-scc-to-user hostmount-anyuid -n {{ storage_nfs_target_namespace }} -z nfs-client-provisioner"
 
 - name: Deploy nfs-provisioner
   tags: nfsprov, storage
