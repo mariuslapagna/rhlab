@@ -274,6 +274,15 @@
     - storage
     - ibm
 
+- name: "Add MachineConfig to the cluster to enable multipath"
+  kubernetes.core.k8s:
+    state: present
+    kubeconfig: "{{ kubeconfig }}"
+    namespace: "{{ kube_storage_namespace }}"
+    src: 99-ibm-attach.yaml
+  tags:
+    - storage
+    - ibm
 
     # todo check the state
     # oc get configs.imageregistry.operator.openshift.io cluster -o yaml | grep -i state
