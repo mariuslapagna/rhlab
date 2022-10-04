@@ -32,7 +32,7 @@
         htpasswd: "{{ item.value | b64encode }}"
       kind: Secret
       metadata:
-        name: "httpasswd-{{ item.key }}"
+        name: "httpasswd{{ item.key }}"
         namespace: openshift-config
       type: Opaque
   loop: "{{ lookup('dict', htpasswd) }}"
@@ -44,9 +44,9 @@
     htpasswd_idp:
       htpasswd:
         fileData:
-          name: "httpasswd-{{ item.key }}"
+          name: "httpasswd{{ item.key }}"
       mappingMethod: claim
-      name: "HtPasswd-{{ item.key }}"
+      name: "HtPasswd{{ item.key }}"
       type: HTPasswd
   loop: "{{ lookup('dict', htpasswd) }}"
   register:  idps
@@ -99,4 +99,4 @@
       roleRef:
         kind: ClusterRole
         name: "cluster-admin"
-  with_items: "{{ocp_admin_users}}"
+  with_items: "{{ocpadmins}}"

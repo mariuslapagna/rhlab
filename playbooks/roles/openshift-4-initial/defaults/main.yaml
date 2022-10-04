@@ -2,7 +2,7 @@
 
 openshift_cli: oc
 
-ocp_admin_users:
+ocpadmins:
   - niko
 
 # namespace there to install 
