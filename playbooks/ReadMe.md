@@ -1,6 +1,16 @@
 
 # How to use playbooks
 
+install python dependencies:
+
+         pip install kubernetes
+
+install kubernetes collection:
+
+
+        ansible-galaxy collection install kubernetes.core
+
+
 create file
 
         .vault_password 

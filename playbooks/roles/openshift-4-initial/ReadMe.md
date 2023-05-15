@@ -2,8 +2,9 @@
 
 it has following tasks:
 
-* Configuring an HTPasswd identity provider
+* configuring an HTPasswd identity provider
 
-* TODO configure stora
+* configure storage NFS and IBM CSI
 
-
+* configure registry storage
+  
