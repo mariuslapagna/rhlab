@@ -190,7 +190,7 @@
     - ibm
 
 
-- name: "all good delte test-pvc"
+- name: "all good delete test-pvc"
   kubernetes.core.k8s:
     state: absent
     kubeconfig: "{{ kubeconfig }}"
@@ -248,6 +248,7 @@
   tags:
     - storage
     - ibm
+  when: ibm_storage_registry_enable
 
 - name: Add pvc registry-storage to image registry and expose it
   kubernetes.core.k8s:
