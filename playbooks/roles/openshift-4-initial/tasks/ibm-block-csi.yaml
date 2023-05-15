@@ -8,7 +8,7 @@
       kind: Namespace
       apiVersion: v1
       metadata:
-        name: "{{ kube_storage_namespace }}"
+        name: "{{ ibm_kube_storage_namespace }}"
   tags:
     - storage
     - ibm
@@ -17,7 +17,7 @@
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ kubeconfig }}"
-    namespace: "{{ kube_storage_namespace }}"
+    namespace: "{{ ibm_kube_storage_namespace }}"
     template:
       crds/1.7.0/ibm-block-csi-operator.yaml.j2
   register: operators
@@ -28,7 +28,7 @@
 
 
 - name: Wait for operator pods to start
-  shell: oc get pod -l app.kubernetes.io/name=ibm-block-csi-operator  -n "{{ kube_storage_namespace }}" | grep -E "(1/1|2/2).*Running" | wc -l
+  shell: oc get pod -l app.kubernetes.io/name=ibm-block-csi-operator  -n "{{ ibm_kube_storage_namespace }}" | grep -E "(1/1|2/2).*Running" | wc -l
   register: podsrunning
   until: " '1' in podsrunning.stdout"
   retries: 120
@@ -48,7 +48,7 @@
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ kubeconfig }}"
-    namespace: "{{ kube_storage_namespace }}"
+    namespace: "{{ ibm_kube_storage_namespace }}"
 
     template:
       crds/1.7.0/csi.ibm.com_v1_ibmblockcsi_cr.yaml.j2
@@ -62,7 +62,7 @@
     minutes: 1
 
 - name: Wait for CSI drivers to start
-  shell: oc get pod -l csi  -n "{{ kube_storage_namespace }}" | grep -v "operator" |  awk '{print $3}' | grep 'Pending|CrashLoopBackOff|ImagePullBackOff|ContainerCreating' | wc -l
+  shell: oc get pod -l csi  -n "{{ ibm_kube_storage_namespace }}" | grep -v "operator" |  awk '{print $3}' | grep 'Pending|CrashLoopBackOff|ImagePullBackOff|ContainerCreating' | wc -l
   register: csi_podsrunning
   until: " '0' in csi_podsrunning.stdout"
   retries: 120
@@ -71,7 +71,6 @@
   tags:
     - storage
     - ibm
-
 
 
 - name: Print operator pod status
@@ -87,7 +86,7 @@
       kind: Secret
       metadata:
         name: svc-dh8
-        namespace: "{{ kube_storage_namespace }}"
+        namespace: "{{ ibm_kube_storage_namespace }}"
       type: Opaque
       stringData:
         management_address: "{{ ibm_storage_address }}"
@@ -113,11 +112,11 @@
         SpaceEfficiency: compressed
         pool: fs840-csi
         csi.storage.k8s.io/provisioner-secret-name: svc-dh8
-        csi.storage.k8s.io/provisioner-secret-namespace: "{{ kube_storage_namespace }}"
+        csi.storage.k8s.io/provisioner-secret-namespace: "{{ ibm_kube_storage_namespace }}"
         csi.storage.k8s.io/controller-publish-secret-name: svc-dh8
-        csi.storage.k8s.io/controller-publish-secret-namespace: "{{ kube_storage_namespace }}"
+        csi.storage.k8s.io/controller-publish-secret-namespace: "{{ ibm_kube_storage_namespace }}"
         csi.storage.k8s.io/controller-expand-secret-name: svc-dh8
-        csi.storage.k8s.io/controller-expand-secret-namespace: "{{ kube_storage_namespace }}"
+        csi.storage.k8s.io/controller-expand-secret-namespace: "{{ ibm_kube_storage_namespace }}"
         csi.storage.k8s.io/fstype: xfs
         volume_name_prefix: rhlab-comp
       allowVolumeExpansion: true
@@ -142,11 +141,11 @@
         SpaceEfficiency: thin
         pool: fs840-csi
         csi.storage.k8s.io/provisioner-secret-name: svc-dh8
-        csi.storage.k8s.io/provisioner-secret-namespace: "{{ kube_storage_namespace }}"
+        csi.storage.k8s.io/provisioner-secret-namespace: "{{ ibm_kube_storage_namespace }}"
         csi.storage.k8s.io/controller-publish-secret-name: svc-dh8
-        csi.storage.k8s.io/controller-publish-secret-namespace: "{{ kube_storage_namespace }}"
+        csi.storage.k8s.io/controller-publish-secret-namespace: "{{ ibm_kube_storage_namespace }}"
         csi.storage.k8s.io/controller-expand-secret-name: svc-dh8
-        csi.storage.k8s.io/controller-expand-secret-namespace: "{{ kube_storage_namespace }}"
+        csi.storage.k8s.io/controller-expand-secret-namespace: "{{ ibm_kube_storage_namespace }}"
         csi.storage.k8s.io/fstype: xfs
         volume_name_prefix: rhlab-thin
       allowVolumeExpansion: true
@@ -160,7 +159,7 @@
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ kubeconfig }}"
-    namespace: "{{ kube_storage_namespace }}"
+    namespace: "{{ ibm_kube_storage_namespace }}"
     definition:
       kind: PersistentVolumeClaim
       apiVersion: v1
@@ -180,7 +179,7 @@
     - ibm
 
 - name: Wait for test pvc to be  bound
-  shell: oc get pvc test-pvc  -n "{{ kube_storage_namespace }}"  -o=jsonpath='{.status.phase}' | grep "Bound" | wc -l
+  shell: oc get pvc test-pvc  -n "{{ ibm_kube_storage_namespace }}"  -o=jsonpath='{.status.phase}' | grep "Bound" | wc -l
   register: test_pvc_bound
   until: " '1' in test_pvc_bound.stdout"
   retries: 120
@@ -195,7 +194,7 @@
   kubernetes.core.k8s:
     state: absent
     kubeconfig: "{{ kubeconfig }}"
-    namespace: "{{ kube_storage_namespace }}"
+    namespace: "{{ ibm_kube_storage_namespace }}"
     definition:
       kind: PersistentVolumeClaim
       apiVersion: v1
@@ -240,6 +239,8 @@
   tags:
     - storage
     - ibm
+  when: ibm_storage_registry_enable
+
 
 - name: patch registry to rolloutStrategy recreate
   shell: oc patch config.imageregistry.operator.openshift.io/cluster --type=merge -p '{"spec":{"rolloutStrategy":"Recreate","replicas":1}}'
@@ -273,12 +274,13 @@
   tags:
     - storage
     - ibm
+  when: ibm_storage_registry_enable
 
 - name: "Add MachineConfig to the cluster to enable multipath"
   kubernetes.core.k8s:
     state: present
     kubeconfig: "{{ kubeconfig }}"
-    namespace: "{{ kube_storage_namespace }}"
+    namespace: "{{ ibm_kube_storage_namespace }}"
     src: 99-ibm-attach.yaml
   tags:
     - storage

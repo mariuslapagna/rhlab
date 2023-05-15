@@ -16,7 +16,7 @@
 
 - name: "test loop"
   debug:
-     msg: "{{item.key}}"
+    msg: "{{item.key}}"
   loop: "{{ lookup('dict', htpasswd) }}"
 
 
@@ -65,7 +65,7 @@
   loop: "{{ idps.results }}"
 
 -  debug:
-     msg: "identity_roviders: {{ identity_roviders  }}"
+    msg: "identity_roviders: {{ identity_roviders  }}"
 
 - name: Configure identity providers
   tags: auth

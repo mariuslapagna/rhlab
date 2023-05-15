@@ -5,8 +5,8 @@
   connection: local
   become: false
   vars:
-      kubeconfig: "{{ lookup('env','HOME') }}/.kube/config"
+    kubeconfig: "{{ lookup('env','HOME') }}/.kube/config"
   vars_files:
     - techdata-auth.yaml
   roles:
-      - {role: openshift-4-initial}
+    - {role: openshift-4-initial}

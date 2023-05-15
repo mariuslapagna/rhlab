@@ -5,7 +5,9 @@ openshift_cli: oc
 ocpadmins:
   - niko
 
-# namespace there to install 
+# namespace there to install
 # storage operators
-kube_storage_namespace: "techdata-storage"
+ibm_kube_storage_namespace: "techdata-storage"
 ibm_storage_address: "192.168.201.100"
+# do not enable storage with ibm csi
+ibm_storage_registry_enable: false

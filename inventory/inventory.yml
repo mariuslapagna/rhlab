@@ -1,6 +1,7 @@
+---
 all:
   hosts:
-    #VMWare Hosts Infrastructure
+    # VMWare Hosts Infrastructure
     infra001.rhlab.ch:
       macaddress: 00:50:56:8a:a4:85
       ipaddress: 192.168.206.10
@@ -10,7 +11,7 @@ all:
     loadbalancer001.rhlab.ch:
       macaddress: 00:50:56:8a:d2:88
       ipaddress: 192.168.206.12
-    #ILO Interfaces
+    # ILO Interfaces
     ilo01.rhlab.ch:
       macaddress: 20:67:7C:EC:D9:4E
       ipaddress: 192.168.206.91
@@ -26,7 +27,7 @@ all:
     ilo05.rhlab.ch:
       macaddress: 20:67:7C:ED:36:76
       ipaddress: 192.168.206.95
-    #HW Hosts    
+    # HW Hostsi
     host01.rhlab.ch:
       macaddress: 20:67:7c:de:49:40
       ipaddress: 192.168.206.101
@@ -42,8 +43,17 @@ all:
     host05.rhlab.ch:
       macaddress: 20:67:7c:e1:f4:98
       ipaddress: 192.168.206.105
-    #Cluster IP's
+    # Cluster IP's
     ocp001.rhlab.ch:
       ipaddress: 192.168.206.111
     api.ocp001.rhlab.ch:
       ipaddress: 192.168.206.112
+  vars:
+    nfs_server: "192.168.204.104"
+    nfs_path: "/rhlab"
+    storage_nfs_target_namespace: "nfs-storage"
+
+    ibm_kube_storage_namespace: "techdata-storage"
+    ibm_storage_address: "192.168.201.100"
+    # do not enable storage with ibm csi
+    ibm_storage_registry_enable: false
